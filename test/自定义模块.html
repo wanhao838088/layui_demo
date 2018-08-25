@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.all.js"></script>
+    <script src="global.js"></script>
+
+</head>
+<body>
+<div id="footer">
+
+</div>
+
+</body>
+</html>
+<script>
+
+
+    //加载自己的组件
+    layui.use(['myCommon'], function () {
+        var common = layui.myCommon;
+        common.footer(document.getElementById('footer'));
+
+    });
+
+</script>
