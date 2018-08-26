@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+
+</head>
+<body>
+
+<div id="hTest">
+
+</div>
+</body>
+</html>
+<script>
+    layui.use(['laytpl','jquery'], function(){
+        var laytpl = layui.laytpl;
+        var $ = layui.jquery;
+
+        //直接解析字符
+        laytpl('{{ d.name }}是一位公猿').render({
+            name: '贤心'
+        }, function(string){
+            console.log(string); //贤心是一位公猿
+        });
+
+
+        //你也可以采用下述同步写法，将 render 方法的回调函数剔除，可直接返回渲染好的字符
+        var string =  laytpl('{{ d.name }}是一位公猿').render({
+            name: '贤心'
+        });
+        console.log(string);  //贤心是一位公猿
+
+         string =  laytpl(' <h1>{{ d.name }}</h1>').render({
+            name: '贤心'
+        });
+         $("#hTest").html(string);
+
+        console.log(string);  //贤心是一位公猿
+
+    });
+</script>
