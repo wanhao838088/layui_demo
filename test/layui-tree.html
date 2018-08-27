@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <script src="zTree_v3/js/jquery.ztree.core.js"></script>
+    <script src="zTree_v3/js/jquery.ztree.excheck.js"></script>
+    <script src="zTree_v3/js/jquery.ztree.exedit.js"></script>
+
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+
+</head>
+<body>
+
+<table class="layui-table" id="roleTable" lay-filter="roleuv"
+       style="margin-bottom: 0;margin-top: 0;">
+
+</table>
+
+
+
+<div id="bindOrganization">
+
+</div>
+
+<div id="app" style="width: 400px;height: 500px;display: none">
+    <div id="treeApplication">
+
+    </div>
+</div>
+
+<script type="text/html" id="barTool">
+    <a class="layui-btn layui-btn-xs layui-btn-radius" lay-event="chooseApp">分配资源</a>
+    <a class="layui-btn layui-btn-xs layui-btn-radius" lay-event="detail">组织</a>
+</script>
+
+</body>
+</html>
+<script>
+    //表格加载
+    layui.use(['table','jquery'], function () {
+        var table = layui.table;
+        var $ = layui.jquery;
+
+        table.render({
+            elem: '#roleTable'
+            , id: 'idRole'
+            , cols: [[
+                {type: 'numbers'}
+                , {checkbox: true}
+                , {field: 'id', width: 250, title: '角色编码', sort: true}
+                , {field: 'roleName', width: 150, title: '角色名称', sort: true, align: 'left'}
+                , {field: 'roleType', width: 100, title: '角色类型', sort: true, align: 'left'}
+                , {field: 'right', title: '操作', width: 145, toolbar: "#barTool", align: 'center'}
+        ]]
+        , page: true
+            , height: 'full-60',
+            data:[
+                {id:'1',roleName:'a',roleType:'333'}
+            ]
+    });
+
+        table.on('tool(roleuv)', function (obj) {
+//        $('#treeApplication').attr("disabled", false);
+            var data = obj.data;
+            window.mydata=data;
+            console.log(window.mydata+"11");
+            console.log(data);
+            if (obj.event === 'chooseApp') {
+                var setting = {
+                    async: {
+                        enable: true,
+                        type: "get",
+//                        url: basePathUrl + "/companyApplication/queryCompanyAppTree/" + companyId + "/" + data.id
+                    },
+                    check: {
+                        enable: true,
+                        chkStyle: "checkbox",
+                        chkboxType: {"Y": "ps", "N": "s"},
+                        radioType: "all"
+                    },
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            idKey: "id",
+                            pIdKey: "pId",
+                            rootPId: 0
+                        }
+                    }
+                };
+                //zTreeObjApp = $.fn.zTree.init($("#treeApplication"), setting);
+                layer.open({
+                    type: 1
+                    , title: '分配资源'
+                    , maxmin: true
+                    , area: ['450px', '500px']
+                    , shade: 0
+                    , content: $('#app')
+                    , btn: ['取消', '保存']
+                    , yes: function () {
+                        layer.closeAll();
+                    }
+                    , btn2: function () {
+                        var treeObj = $.fn.zTree.getZTreeObj("treeApplication");
+                        var nodes = treeObj.getChangeCheckedNodes();
+                        if (nodes.length < 1) {
+                            layer.msg('请编辑要给该角色分配的资源！', {icon: 7});
+                            return;
+                        }
+//                        $.ajax({
+//                            //url: basePathUrl + "/roleApplication/saveRoleApplication/" + data.id,
+//                            type: "POST",
+//                            dataType: "json",
+//                            contentType: "application/json;charse=UTF-8",
+//                            headers: {'Authorization': token},
+//                            data: JSON.stringify(nodes),
+//                            success: function (result) {
+//                                if (result.code === "200") {
+//                                    layer.msg("保存资源成功！", {icon: 6});
+//                                }
+//                            },
+//                            error: function () {
+//                                layer.msg("保存资源失败！", {icon: 5})
+//                            }
+//                        })
+                    }
+                });
+            } else if (obj.event === 'detail') {
+                //$('#app')[0].reset()
+                //$('#app').attr("disabled", false);
+                var zNodes = [
+                    {
+                        name: "test1", open: true, children: [
+                        {name: "test1_1"}, {name: "test1_2"}]
+                    },
+                    {
+                        name: "test2", open: true, children: [
+                        {name: "test2_1"}, {name: "test2_2"}]
+                    }
+                ];
+
+                //初始化树============================================
+                zTreeObj = $.fn.zTree.init($("#treeApplication"), setting, zNodes);
+
+                layer.open({
+                    type: 1
+                    , title: '绑定组织机构（请务必绑定到具体个人，否则绑定失效）'
+                    , maxmin: true
+                    , area: ['450px', '500px']
+                    , shade: 0
+                    , content: $('#app')
+                });
+                var zTreeObj;
+
+                var setting = {
+                    async: {
+                        enable: true,
+                        type: "get",    //下面加载的这个url就是初始化树的接口，根据公司ID查询该公司的组织机构。
+                        // url: basePathUrl + "/organization/queryOrganizationUserTree?companyId="+companyId,
+                        // otherParam: ["companyId", companyId],
+                        autoParam: ["id"]   //这个id对应着点击某一个组织机构后，将点击的节点ID传到接口的ID,会自动获取点击ID,对应异步查询的接口
+                    },
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            idKey: "id",
+                            pIdKey: "pId",
+                            rootPId: 0
+                        }
+                    },
+                    check: {
+                        enable: true,
+                        chkStyle: "checkbox",
+                        //radioType: "level"
+                        chkboxType: {"Y": "s", "N": "s"},   //这里是节点的父子关联设置。
+                        radioType: "all"
+                    },
+                    callback: {
+                        // beforeAsync  : ztreeBeforeAsync,
+//                        onClick:ztreeOnAsyncSuccess,    //点击树节点出发的事件，也就是异步加载的接口（参数在上面的autoParam）
+//                        onAsyncSuccess : ztreeOnAsyncSuccess, //这个也要添加
+
+                    }
+                };
+
+            }
+
+        })
+
+
+    });
+
+</script>

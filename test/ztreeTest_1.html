@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <script src="zTree_v3/js/jquery.ztree.core.js"></script>
+    <script src="zTree_v3/js/jquery.ztree.excheck.js"></script>
+    <script src="zTree_v3/js/jquery.ztree.exedit.js"></script>
+
+</head>
+<body>
+
+<div id="open">
+    <ul id="treeDemo" class="ztree"></ul>
+</div>
+
+</body>
+</html>
+<script>
+    var zTreeObj;
+    var setting = {};
+    var zNodes = [
+        {name:"test1", open:true, children:[
+            {name:"test1_1"}, {name:"test1_2"}]},
+        {name:"test2", open:true, children:[
+            {name:"test2_1"}, {name:"test2_2"}]}
+    ];
+    $(document).ready(function(){
+        zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    });
+</script>
