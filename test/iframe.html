@@ -10,14 +10,18 @@
             padding: 0;
         }
     </style>
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
 </head>
 <body>
 <div style="display: flex;flex-direction: column">
     <iframe scrolling="no" src="frames/top.html" frameborder="0"></iframe>
     <div style="display: flex;margin-top: -50px;">
-        <iframe scrolling="no" height="500" frameborder="0"
-                src="frames/left.html"></iframe>
-        <iframe scrolling="no" style="flex: 1" height="500" frameborder="0"
+
+        <div style="width: 400px;background: blue;height: 500px;">
+            <button id="change">切换内容</button>
+        </div>
+
+        <iframe id="frame" scrolling="no" style="flex: 1" height="500" frameborder="0"
                 src="frames/right.html"></iframe>
     </div>
 </div>
@@ -29,4 +33,8 @@
     if (top.location.host != window.location.host) {
         top.location.href = window.location.href;
     }
+
+    $("#change").click(function () {
+        $("#frame").attr('src','http://www.baidu.com');
+    })
 </script>
